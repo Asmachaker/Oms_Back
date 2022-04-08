@@ -1,5 +1,6 @@
 package com.demo.oms.service;
 
+import com.demo.oms.dto.ZoneDTO;
 import com.demo.oms.entity.Zone;
 
 import java.util.List;
@@ -11,7 +12,7 @@ public interface ZoneService {
 
     Zone getZone(Integer id);
 
-    void UpdateZone(Zone zone);
+    void UpdateZone(ZoneDTO zone);
 
     void deleteZone(Integer id);
 }

@@ -10,16 +10,24 @@ import java.util.Set;
 public class Zone {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id ;
     private String name ;
 
-    @OneToMany(mappedBy="zone", fetch = FetchType.EAGER)
-    private Set<CodePostal> codes;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "codePostal", referencedColumnName = "code")
+    private CodePostal code;
 
     @OneToMany(mappedBy="zone")
     private Set<Tarif> tarifs;
 
+    public Zone() {
+    }
+
+    public Zone(int id, String name, CodePostal code) {
+        this.id = id;
+        this.name = name;
+        this.code = code;
+    }
 
     public int getId() {
         return id;
@@ -37,13 +45,11 @@ public class Zone {
         this.name = name;
     }
 
-    public Set<CodePostal> getCodes() {
-        return codes;
+    public CodePostal getCode() {
+        return code;
     }
 
-    public void setCodes(Set<CodePostal> codes) {
-        this.codes = codes;
+    public void setCode(CodePostal code) {
+        this.code = code;
     }
-
-
 }

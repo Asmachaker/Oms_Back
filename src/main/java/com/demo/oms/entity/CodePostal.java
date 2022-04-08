@@ -8,33 +8,26 @@ import javax.persistence.*;
 @Proxy(lazy = false)
 public class CodePostal {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private Integer code;
+    private int code;
+    private String name;
 
-
-    @ManyToOne
-    @JoinColumn(name="zone_name", nullable=false)
+    @OneToOne(mappedBy = "code")
     private Zone zone;
 
 
-
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Integer getCode() {
+    public int getCode() {
         return code;
     }
 
-    public void setCode(Integer code) {
+    public void setCode(int code) {
         this.code = code;
     }
 
+    public String getName() {
+        return name;
+    }
 
+    public void setName(String name) {
+        this.name = name;
+    }
 }

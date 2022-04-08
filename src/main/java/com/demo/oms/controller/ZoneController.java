@@ -1,5 +1,6 @@
 package com.demo.oms.controller;
 
+import com.demo.oms.dto.ZoneDTO;
 import com.demo.oms.entity.Zone;
 import com.demo.oms.service.ZoneService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,7 @@ public class ZoneController {
         return new ResponseEntity<>(HttpStatus.OK);}
 
     @PutMapping("/ModifyZone")
-    public ResponseEntity<?> ModifyZone( @RequestBody Zone zone) {
+    public ResponseEntity<?> ModifyZone( @RequestBody ZoneDTO zone) {
 
         zoneService.UpdateZone(zone);
         return new ResponseEntity<>(HttpStatus.OK);
