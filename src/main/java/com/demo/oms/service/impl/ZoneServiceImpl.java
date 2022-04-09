@@ -21,8 +21,12 @@ public class ZoneServiceImpl implements ZoneService {
     private CodePostalRepository codeRepository;
 
     @Override
-    public void addZone(Zone zone) {
-        zoneRepository.save(zone);
+    public void addZone(ZoneDTO zone) {
+        System.out.print(zone);
+        CodePostal code = codeRepository.getCodeByName(zone.getCodePostal());
+        System.out.print(code);
+        Zone  zones =new Zone(zone.getId(), zone.getName(),code);
+        zoneRepository.save(zones);
     }
 
     @Override
@@ -39,8 +43,9 @@ public class ZoneServiceImpl implements ZoneService {
 
     @Override
     public void UpdateZone(ZoneDTO zone) {
-        CodePostal Code = codeRepository.findById(zone.getCodePostal()).get();
-        Zone  zones =new Zone(zone.getId(), zone.getName(),Code);
+        CodePostal code = codeRepository.getCodeByName(zone.getCodePostal());
+        System.out.print(code);
+        Zone  zones =new Zone(zone.getId(), zone.getName(),code);
         zoneRepository.save(zones);
 
     }

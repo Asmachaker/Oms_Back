@@ -13,8 +13,8 @@ public class Zone {
     private int id ;
     private String name ;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "codePostal", referencedColumnName = "code")
+    @ManyToOne
+    @JoinColumn(name="code", nullable=false)
     private CodePostal code;
 
     @OneToMany(mappedBy="zone")

@@ -27,7 +27,7 @@ public class ZoneController {
     }
 
     @PostMapping("/addZone")
-    public ResponseEntity<?> saveZone(@RequestBody Zone zone) {
+    public ResponseEntity<?> saveZone(@RequestBody ZoneDTO zone) {
         zoneService.addZone(zone);
 
         return new ResponseEntity<>( HttpStatus.CREATED);
@@ -40,8 +40,8 @@ public class ZoneController {
         return new ResponseEntity<>(zoneList, HttpStatus.OK);
     }
 
-    @PostMapping("/deleteZone/{id}")
-    public ResponseEntity<?> DeleteZone(@PathVariable int id) {
+    @PostMapping("/deleteZone")
+    public ResponseEntity<?> DeleteZone(@RequestBody int id) {
 
         zoneService.deleteZone(id);
         return new ResponseEntity<>(HttpStatus.OK);}

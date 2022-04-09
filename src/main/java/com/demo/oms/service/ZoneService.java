@@ -6,7 +6,9 @@ import com.demo.oms.entity.Zone;
 import java.util.List;
 
 public interface ZoneService {
-    void addZone(Zone zone);
+
+
+    void addZone(ZoneDTO zone);
 
     List<Zone> getAllZone();
 

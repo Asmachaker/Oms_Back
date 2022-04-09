@@ -6,7 +6,6 @@ import javax.persistence.*;
 public class Tarif {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id ;
     private float price;
 

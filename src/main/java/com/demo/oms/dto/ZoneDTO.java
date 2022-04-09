@@ -3,9 +3,9 @@ package com.demo.oms.dto;
 public class ZoneDTO {
     private int id ;
     private String name;
-    private int CodePostal;
+    private String CodePostal;
 
-    public ZoneDTO(int id, String name, int codePostal) {
+    public ZoneDTO(int id, String name, String codePostal) {
         this.id = id;
         this.name = name;
         CodePostal = codePostal;
@@ -27,11 +27,11 @@ public class ZoneDTO {
         this.name = name;
     }
 
-    public int getCodePostal() {
+    public String getCodePostal() {
         return CodePostal;
     }
 
-    public void setCodePostal(int codePostal) {
+    public void setCodePostal(String codePostal) {
         CodePostal = codePostal;
     }
 }
