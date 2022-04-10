@@ -1,13 +1,17 @@
 package com.demo.oms.entity;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 public class Tarif {
 
     @Id
     private Integer id ;
+    private String name;
     private float price;
+
+
 
     @ManyToOne
     @JoinColumn(name="shift", nullable=false)
@@ -20,6 +24,22 @@ public class Tarif {
     @ManyToOne
     @JoinColumn(name="taille", nullable=false)
     private Taille taille;
+
+    @OneToMany(mappedBy="tarif")
+    private Set<Booking> booking;
+
+
+    public Tarif() {
+    }
+
+    public Tarif(Integer id, String name, float price, Shift shift, Zone zone, Taille taille) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.shift = shift;
+        this.zone = zone;
+        this.taille = taille;
+    }
 
     public Integer getId() {
         return id;
@@ -47,6 +67,13 @@ public class Tarif {
 
     public Zone getZone() {
         return zone;
+    }
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setZone(Zone zone) {

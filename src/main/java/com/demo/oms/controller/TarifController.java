@@ -1,6 +1,7 @@
 package com.demo.oms.controller;
 
 
+import com.demo.oms.dto.TarifDTO;
 import com.demo.oms.entity.Tarif;
 import com.demo.oms.service.TarifService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,14 +40,14 @@ public class TarifController {
         return new ResponseEntity<>(tarifList, HttpStatus.OK);
     }
 
-    @PostMapping("/deleteTarif/{id}")
-    public ResponseEntity<?> DeleteTarif(@PathVariable int id) {
+    @PostMapping("/deleteTarif")
+    public ResponseEntity<?> DeleteTarif(@RequestBody int id) {
 
         tarifService.deleteTarif(id);
         return new ResponseEntity<>(HttpStatus.OK);}
 
     @PutMapping("/ModifyTarif")
-    public ResponseEntity<?> ModifyTarif( @RequestBody Tarif tarif) {
+    public ResponseEntity<?> ModifyTarif( @RequestBody TarifDTO tarif) {
 
         tarifService.UpdateTarif(tarif);
         return new ResponseEntity<>(HttpStatus.OK);

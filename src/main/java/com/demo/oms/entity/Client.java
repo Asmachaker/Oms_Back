@@ -1,7 +1,7 @@
 package com.demo.oms.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 public class Client {
@@ -15,6 +15,14 @@ public class Client {
     private Long taxNumber;
     private String gouvernorat;
     private int deadlinePaiment;
+
+    @OneToMany(mappedBy="client")
+    private Set<Booking> booking;
+
+
+
+
+
 
 
     public String getId() {
