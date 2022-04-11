@@ -58,8 +58,12 @@ public class TarifServiceImpl implements TarifService {
     }
 
     @Override
-    public List<Tarif> search(String key)
-    {return tarifRepository.search(key);}
+    public Tarif getTarifByAtt(int idZ, String idT, String idS)
+    {  Zone zone = zoneRepository.findById(idZ).get();
+        Taille taille= tailleRepository.findById(idT).get();
+        Shift shift = shiftRepository.getShiftByName(idS);
+
+        return tarifRepository.getTarifByAtt(zone,taille,shift);}
 
     @Override
     public void deleteTarif(Integer id) {

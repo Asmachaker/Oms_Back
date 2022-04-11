@@ -14,7 +14,8 @@ public interface TarifService {
 
     void UpdateTarif(TarifDTO tarif);
 
-    List<Tarif> search(String key);
+
+    Tarif getTarifByAtt(int idZ, String idT, String idS);
 
     void deleteTarif(Integer id);
 }

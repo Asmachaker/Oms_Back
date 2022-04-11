@@ -61,11 +61,12 @@ public class TarifController {
         return new ResponseEntity<>(tarif, HttpStatus.OK);
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<List<Tarif>> search(  @RequestParam String key) {
 
-        List<Tarif> tarifList = tarifService.search(key);
-        return new ResponseEntity<>(tarifList, HttpStatus.OK);
+    @GetMapping("/GetTarif/{idZone}/{idTaille}/{idShift}")
+    public ResponseEntity<Tarif> GetTarifBy(  @PathVariable("idZone") int idZ, @PathVariable("idTaille") String idT,@PathVariable("idShift") String idS) {
+
+        Tarif tarif= tarifService.getTarifByAtt(idZ, idT, idS);
+        return new ResponseEntity<>(tarif, HttpStatus.OK);
     }
 
 

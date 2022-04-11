@@ -1,6 +1,7 @@
 package com.demo.oms.controller;
 
 
+import com.demo.oms.dto.BookingDTO;
 import com.demo.oms.entity.Booking;
 import com.demo.oms.entity.Client;
 import com.demo.oms.service.BookingService;
@@ -40,4 +41,15 @@ public class BookingController {
 
         return new ResponseEntity<>( HttpStatus.CREATED);
     }
+
+    @PostMapping("/confirmBooking")
+    public ResponseEntity<Booking> confirmBooking(@RequestBody BookingDTO bookingDto) {
+      Booking booking =  bookingService.confirmBooking(bookingDto);
+
+        return new ResponseEntity<>( booking,HttpStatus.CREATED);
+    }
+
+
+
+
 }

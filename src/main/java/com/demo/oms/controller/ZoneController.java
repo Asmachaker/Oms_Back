@@ -61,6 +61,12 @@ public class ZoneController {
         return new ResponseEntity<>(zone, HttpStatus.OK);
     }
 
+    @GetMapping("/GetZoneCode/{id}")
+    public ResponseEntity<Zone> GetZoneCode(  @PathVariable int id) {
+
+        Zone zone= zoneService.getZoneCode(id);
+        return new ResponseEntity<>(zone, HttpStatus.OK);
+    }
 
 
 

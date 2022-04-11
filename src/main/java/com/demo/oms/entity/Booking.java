@@ -1,15 +1,18 @@
 package com.demo.oms.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Entity
 public class Booking {
+
     @Id
-    Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column( columnDefinition = "serial")
+    private Long numCommande;
 
     @ManyToOne
     @JoinColumn(name="client", nullable=false)
@@ -23,21 +26,23 @@ public class Booking {
     private String deliveryCode  ;
     private String trackingCode  ;
     private String statut;
-    private Long numCommande;
+
+
     private Date date;
     private Long idBox;
     private String colone;
     private String StationName;
     private Long idStation;
 
-
-    public Long getId() {
-        return id;
+    public Date getDate() {
+        return date;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setDate(Date date) {
+        this.date = date;
     }
+
+
 
     public Client getClient() {
         return client;
@@ -93,14 +98,6 @@ public class Booking {
 
     public void setNumCommande(Long numCommande) {
         this.numCommande = numCommande;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
     }
 
     public Long getIdBox() {

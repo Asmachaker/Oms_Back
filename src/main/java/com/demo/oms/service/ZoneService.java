@@ -14,6 +14,8 @@ public interface ZoneService {
 
     Zone getZone(Integer id);
 
+    Zone getZoneCode(Integer id);
+
     void UpdateZone(ZoneDTO zone);
 
     void deleteZone(Integer id);

@@ -42,12 +42,17 @@ public class ZoneServiceImpl implements ZoneService {
     }
 
     @Override
+    public Zone getZoneCode(Integer id) {
+        CodePostal code = codeRepository.findById(id).get();
+        return zoneRepository.getZoneBycode(code);
+    }
+
+    @Override
     public void UpdateZone(ZoneDTO zone) {
         CodePostal code = codeRepository.getCodeByName(zone.getCodePostal());
         System.out.print(code);
         Zone  zones =new Zone(zone.getId(), zone.getName(),code);
         zoneRepository.save(zones);
-
     }
 
     @Override
