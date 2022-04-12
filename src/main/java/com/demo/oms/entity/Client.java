@@ -1,6 +1,7 @@
 package com.demo.oms.entity;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -16,12 +17,11 @@ public class Client {
     private String gouvernorat;
     private int deadlinePaiment;
 
-    @OneToMany(mappedBy="client")
+    @OneToMany(fetch = FetchType.EAGER,mappedBy="client")
     private Set<Booking> booking;
 
-
-
-
+    @OneToMany(mappedBy="client")
+    private Set<Bordereau> bordereau;
 
 
 
@@ -97,4 +97,6 @@ public class Client {
     public void setDeadlinePaiment(int deadlinePaiment) {
         this.deadlinePaiment = deadlinePaiment;
     }
+
+
 }

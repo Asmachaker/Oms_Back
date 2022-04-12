@@ -1,5 +1,6 @@
 package com.demo.oms.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -22,12 +23,16 @@ public class Booking {
     @JoinColumn(name="tarif", nullable=false)
     private Tarif tarif;
 
+    @ManyToOne
+    private Bordereau bordereau;
+
     private String pickupCode  ;
     private String deliveryCode  ;
     private String trackingCode  ;
     private String statut;
 
-
+    @Column(updatable=false)
+    @JsonFormat(shape= JsonFormat.Shape.STRING,pattern="yyyy-MM-dd hh:mm:ss")
     private Date date;
     private Long idBox;
     private String colone;
@@ -43,6 +48,13 @@ public class Booking {
     }
 
 
+    public Bordereau getBordereau() {
+        return bordereau;
+    }
+
+    public void setBordereau(Bordereau bordereau) {
+        this.bordereau = bordereau;
+    }
 
     public Client getClient() {
         return client;

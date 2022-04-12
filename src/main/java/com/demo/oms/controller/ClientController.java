@@ -2,6 +2,7 @@ package com.demo.oms.controller;
 
 
 
+import com.demo.oms.entity.Booking;
 import com.demo.oms.entity.Client;
 import com.demo.oms.entity.CodePostal;
 import com.demo.oms.service.ClientService;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/client")
@@ -39,6 +41,13 @@ public class ClientController {
 
         List<Client> clientList = clientService.getAllClient();
         return new ResponseEntity<>(clientList, HttpStatus.OK);
+    }
+
+    @GetMapping("/getAllActiveClient")
+    public ResponseEntity<List<Client>> getAllBookingbyClient() {
+
+        List<Client> bookingList= clientService.getBookings();
+        return new ResponseEntity<>(bookingList, HttpStatus.OK);
     }
 
     @PostMapping("/EnableClient/{id}")

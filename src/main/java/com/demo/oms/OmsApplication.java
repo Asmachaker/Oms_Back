@@ -12,6 +12,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @EnableAutoConfiguration
 @EnableJpaAuditing
+@EnableScheduling
 public class OmsApplication {
 
     @Bean
