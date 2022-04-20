@@ -10,7 +10,8 @@ import com.demo.oms.util.Converter.BookingConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.awt.print.Book;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -46,6 +47,20 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public void addBooking(Booking booking) {
         bookingRepository.save(booking);
+    }
+
+
+    @Override
+    public List<Booking> getBookingByDate(String idclient)
+    {
+        Client client = clientRepository.findById(idclient).get();
+        LocalDate now = LocalDate.now();
+        LocalDate LastDate = LocalDate.now().minusMonths(1).withDayOfMonth(1);
+        LocalDate FirstDate = LocalDate.now().withDayOfMonth(1);
+        Date nowSqlDate = Date.valueOf(FirstDate);
+        Date lastSqlDate = Date.valueOf(LastDate);
+        List<Booking> bookings=bookingRepository.getBookingByDate(client,lastSqlDate,nowSqlDate);
+        return bookings;
     }
 
     @Override

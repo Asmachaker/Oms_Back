@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -17,11 +18,10 @@ public class Bordereau {
     @JoinColumn(name="client", nullable=false)
     private Client client;
 
-    @OneToMany(mappedBy="bordereau")
-    private Set<Booking> booking;
+    @OneToMany(fetch=FetchType.EAGER,mappedBy="bordereau")
+    private List<Booking> booking;
 
     @Column(updatable=false)
-    @JsonFormat(shape= JsonFormat.Shape.STRING,pattern="yyyy-MM-dd")
     private Date date ;
 
     public Long getId() {
@@ -40,11 +40,11 @@ public class Bordereau {
         this.client = client;
     }
 
-    public Set<Booking> getBooking() {
+    public List<Booking> getBooking() {
         return booking;
     }
 
-    public void setBooking(Set<Booking> booking) {
+    public void setBooking(List<Booking> booking) {
         this.booking = booking;
     }
 

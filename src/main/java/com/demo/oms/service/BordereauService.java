@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface BordereauService {
     List<Bordereau> getAllBordereaus();
+
+    void generateBordereau();
 }

@@ -27,7 +27,7 @@ public class Booking {
     private Bordereau bordereau;
 
     private String pickupCode  ;
-    private String deliveryCode  ;
+    private String deliveryCode  ;  
     private String trackingCode  ;
     private String statut;
 

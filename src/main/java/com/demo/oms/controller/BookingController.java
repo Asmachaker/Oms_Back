@@ -35,6 +35,13 @@ public class BookingController {
         return new ResponseEntity<>(bookingList, HttpStatus.OK);
     }
 
+    @GetMapping("/getBooking/{id}")
+    public ResponseEntity<List<Booking>> getAllbookingsByDate(@PathVariable String id) {
+
+        List<Booking> bookingList = bookingService.getBookingByDate(id);
+        return new ResponseEntity<>(bookingList, HttpStatus.OK);
+    }
+
     @PostMapping("/addBooking")
     public ResponseEntity<?> saveBooking(@RequestBody Booking booking) {
         bookingService.addBooking(booking);
