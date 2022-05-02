@@ -22,7 +22,7 @@ public class ZoneServiceImpl implements ZoneService {
 
     @Override
     public void addZone(ZoneDTO zone) {
-        System.out.print(zone);
+
         CodePostal code = codeRepository.getCodeByName(zone.getCodePostal());
         System.out.print(code);
         Zone  zones =new Zone(zone.getId(), zone.getName(),code);

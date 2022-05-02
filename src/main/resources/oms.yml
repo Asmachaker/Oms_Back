@@ -17,7 +17,7 @@ spring:
   # Database
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/oms?createDatabaseIfNotExist=true
+    url: jdbc:postgresql://localhost:5432/oms_db?createDatabaseIfNotExist=true
     username: postgres
     password: asma
   # JPA properties

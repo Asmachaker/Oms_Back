@@ -18,8 +18,9 @@ public class Bordereau {
     @JoinColumn(name="client", nullable=false)
     private Client client;
 
-    @OneToMany(fetch=FetchType.EAGER,mappedBy="bordereau")
-    private List<Booking> booking;
+    @OneToMany(targetEntity=Booking.class, fetch=FetchType.EAGER)
+    @JoinColumn(name="bookings")
+    private List<Booking> bookings;
 
     @Column(updatable=false)
     private Date date ;
@@ -41,11 +42,11 @@ public class Bordereau {
     }
 
     public List<Booking> getBooking() {
-        return booking;
+        return bookings;
     }
 
     public void setBooking(List<Booking> booking) {
-        this.booking = booking;
+        this.bookings = booking;
     }
 
     public Date getDate() {

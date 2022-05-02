@@ -23,8 +23,6 @@ public class Booking {
     @JoinColumn(name="tarif", nullable=false)
     private Tarif tarif;
 
-    @ManyToOne
-    private Bordereau bordereau;
 
     private String pickupCode  ;
     private String deliveryCode  ;  
@@ -47,14 +45,6 @@ public class Booking {
         this.date = date;
     }
 
-
-    public Bordereau getBordereau() {
-        return bordereau;
-    }
-
-    public void setBordereau(Bordereau bordereau) {
-        this.bordereau = bordereau;
-    }
 
     public Client getClient() {
         return client;

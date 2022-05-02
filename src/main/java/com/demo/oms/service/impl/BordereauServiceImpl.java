@@ -12,11 +12,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.sql.Date;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.YearMonth;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class BordereauServiceImpl implements BordereauService {
@@ -36,7 +34,12 @@ public class BordereauServiceImpl implements BordereauService {
     }
 
     @Override
-    public void generateBordereau()
+    public Bordereau getBordereau(Long id) {
+
+        return bordereauRepository.findById(id).get();
+    }
+    @Override
+    public Bordereau generateBordereau()
     {
         List<Client> clients = clientRepository.getEnabledClient();
         LocalDate now = LocalDate.now();
@@ -44,15 +47,24 @@ public class BordereauServiceImpl implements BordereauService {
         LocalDate FirstDate = LocalDate.now().withDayOfMonth(1);
         Date nowSqlDate = Date.valueOf(FirstDate);
         Date lastSqlDate = Date.valueOf(LastDate);
+        Bordereau bordereau= new Bordereau();
         for(Client client : clients) {
             List<Booking> bookings=bookingRepository.getBookingByDate(client,lastSqlDate,nowSqlDate);
-            Bordereau bordereau= new Bordereau();
+
             bordereau.setClient(client);
-            bordereau.setBooking(bookings);
+           bordereau.setBooking(bookings);
+//            for (Booking booking : bookings) {
+//                bordereau.getBooking().add(booking);
+//            }
             bordereau.setDate(nowSqlDate);
-            bordereauRepository.save(bordereau);
+
         }
+        return bordereauRepository.save(bordereau);
     }
 
+    @Override
+    public void deleteBordereau(Long id) {
 
+        bordereauRepository.deleteById(id);
+    }
 }

@@ -2,6 +2,7 @@ package com.demo.oms.controller;
 
 import com.demo.oms.entity.Booking;
 import com.demo.oms.entity.Bordereau;
+import com.demo.oms.entity.Client;
 import com.demo.oms.service.BordereauService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,10 +28,24 @@ public class BordereauController {
         return new ResponseEntity<>(BordereauList, HttpStatus.OK);
     }
 
-    @PostMapping("/addbordereau")
-    public ResponseEntity<?> savebordereau() {
-        bordereauService.generateBordereau();
+    @GetMapping("/addbordereau")
+    public ResponseEntity<Bordereau> savebordereau() {
+       Bordereau bordereau= bordereauService.generateBordereau();
 
-        return new ResponseEntity<>( HttpStatus.CREATED);
+        return new ResponseEntity<Bordereau>( bordereau,HttpStatus.CREATED);
     }
+
+    @GetMapping("/GetBordereau/{id}")
+    public ResponseEntity<Bordereau> GetBordereau(@PathVariable Long id) {
+
+        Bordereau bordereau= bordereauService.getBordereau(id);
+        return new ResponseEntity<>(bordereau, HttpStatus.OK);
+    }
+
+    @PostMapping("/deleteBordereau/{id}")
+    public ResponseEntity<?> DeleteBordereau(@PathVariable Long id) {
+
+        bordereauService.deleteBordereau(id);
+        return new ResponseEntity<>(HttpStatus.OK);}
+
 }

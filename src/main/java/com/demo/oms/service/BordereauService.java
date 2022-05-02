@@ -7,5 +7,9 @@ import java.util.List;
 public interface BordereauService {
     List<Bordereau> getAllBordereaus();
 
-    void generateBordereau();
+    Bordereau getBordereau(Long id);
+
+    Bordereau generateBordereau();
+
+    void deleteBordereau(Long id);
 }
