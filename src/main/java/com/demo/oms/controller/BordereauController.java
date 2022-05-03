@@ -48,4 +48,10 @@ public class BordereauController {
         bordereauService.deleteBordereau(id);
         return new ResponseEntity<>(HttpStatus.OK);}
 
+    @PostMapping("/generateFacture")
+    public ResponseEntity<?> Generatefacture(@RequestBody List<Booking> id) {
+
+        System.out.println(id);
+        return new ResponseEntity<>(HttpStatus.OK);}
+
 }

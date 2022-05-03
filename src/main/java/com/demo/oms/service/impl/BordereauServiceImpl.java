@@ -50,12 +50,15 @@ public class BordereauServiceImpl implements BordereauService {
         Bordereau bordereau= new Bordereau();
         for(Client client : clients) {
             List<Booking> bookings=bookingRepository.getBookingByDate(client,lastSqlDate,nowSqlDate);
+            Long i= 1L;
+        for(Booking booking :bookings)
+        {
+            booking.setNumCommande(i);
+            i++;
 
+        }
             bordereau.setClient(client);
            bordereau.setBooking(bookings);
-//            for (Booking booking : bookings) {
-//                bordereau.getBooking().add(booking);
-//            }
             bordereau.setDate(nowSqlDate);
 
         }
