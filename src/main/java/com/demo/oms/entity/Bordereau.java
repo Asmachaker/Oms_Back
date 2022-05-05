@@ -22,8 +22,16 @@ public class Bordereau {
     @JoinColumn(name="bookings")
     private List<Booking> bookings;
 
+    @OneToMany(mappedBy="bordereau")
+    private List<FactureAvoir> factureAvoirs;
+
+    @OneToMany(mappedBy="bordereau")
+    private List<Facture> facture;
+
     @Column(updatable=false)
     private Date date ;
+
+
 
     public Long getId() {
         return id;

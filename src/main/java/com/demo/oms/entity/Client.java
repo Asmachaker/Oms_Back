@@ -23,6 +23,12 @@ public class Client {
     @OneToMany(mappedBy="client")
     private Set<Bordereau> bordereau;
 
+    @OneToMany(mappedBy="customer")
+    private Set<Facture> facture;
+
+    @OneToMany(mappedBy="customer")
+    private Set<FactureAvoir> factureAvoir;
+
 
 
     public String getId() {
