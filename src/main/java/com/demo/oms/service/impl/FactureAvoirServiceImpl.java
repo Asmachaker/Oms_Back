@@ -12,21 +12,18 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class FactureAvoirServiceImpl implements FactureAvoirService {
-    
+
     @Autowired
     FactureAvoirRepository factureAvoirRepository;
 
     @Autowired
     BordereauService bordereauService;
 
-    
+
     @Override
     public void addFactureAvoir(FactureAvoir factureAvoir) {
         factureAvoirRepository.save(factureAvoir);
@@ -49,8 +46,7 @@ public class FactureAvoirServiceImpl implements FactureAvoirService {
     }
 
     @Override
-    public Map<Integer, Integer> generateFactureAvoir(List<Booking> bookings, Long id)
-    {
+    public Map<Integer, Integer> generateFactureAvoir(List<Booking> bookings, Long id) {
         Bordereau bordereau = bordereauService.getBordereau(id);
         FactureAvoir factureAvoir = new FactureAvoir();
         factureAvoir.setClient(bordereau.getClient());
@@ -61,18 +57,18 @@ public class FactureAvoirServiceImpl implements FactureAvoirService {
         factureAvoir.setBordereau(bordereau);
         Map<Integer, Integer> tarifMap = new HashMap<>();
 
-        for(Booking booking : bookings)
-        {
-            Integer tarif= booking.getTarif().getId();
+        for (Booking booking : bookings) {
+            Integer tarif = booking.getTarif().getId();
             if (tarifMap.containsKey(tarif)) {
-                int value =tarifMap.get(tarif);
-                tarifMap.put(tarif,value+1);}
-            else{
-                tarifMap.putIfAbsent(tarif,1);
+                int value = tarifMap.get(tarif);
+                tarifMap.put(tarif, value + 1);
+            } else {
+                tarifMap.putIfAbsent(tarif, 1);
             }
         }
-return tarifMap;
+        return tarifMap;
 
 
     }
+
 }

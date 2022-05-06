@@ -17,4 +17,6 @@ public interface FactureAvoirService {
     void EnableFactureAvoir(Long id);
 
     Map<Integer,Integer> generateFactureAvoir(List<Booking> bookings, Long id);
+
+
 }
