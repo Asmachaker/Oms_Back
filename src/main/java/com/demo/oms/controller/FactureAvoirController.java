@@ -1,16 +1,19 @@
 package com.demo.oms.controller;
 
 
+import com.demo.oms.dto.FactureDTO;
 import com.demo.oms.entity.Booking;
 import com.demo.oms.entity.Facture;
 import com.demo.oms.entity.FactureAvoir;
 import com.demo.oms.entity.Tarif;
 import com.demo.oms.service.FactureAvoirService;
+import net.sf.jasperreports.engine.JRException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,11 +60,10 @@ public class FactureAvoirController {
         return new ResponseEntity<>(factureAvoir, HttpStatus.OK);
     }
     @PostMapping("/generateFactureAvoir/{id}")
-    public ResponseEntity<Map<Integer, Integer>> Generatefacture(@RequestBody List<Booking> list, @PathVariable Long id ) {
+    public ResponseEntity<String> Generatefacture(@RequestBody List<Booking> list, @PathVariable Long id ) throws JRException, FileNotFoundException {
 
-        Map<Integer, Integer> tarifMap = factureAvoirService.generateFactureAvoir(list,id);
-
-        return new ResponseEntity<Map<Integer, Integer>>(tarifMap,HttpStatus.OK);}
+      String res = factureAvoirService.exportReport(list,id);
+        return new ResponseEntity<String>(res,HttpStatus.OK);}
 
 
 }

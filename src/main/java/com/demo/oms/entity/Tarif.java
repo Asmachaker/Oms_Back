@@ -1,6 +1,7 @@
 package com.demo.oms.entity;
 
 import javax.persistence.*;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -86,5 +87,18 @@ public class Tarif {
 
     public void setTaille(Taille taille) {
         this.taille = taille;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Tarif tarif = (Tarif) o;
+        return Float.compare(tarif.price, price) == 0 && Objects.equals(id, tarif.id) && Objects.equals(name, tarif.name) && Objects.equals(shift, tarif.shift) && Objects.equals(zone, tarif.zone) && Objects.equals(taille, tarif.taille) && Objects.equals(booking, tarif.booking);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, price, shift, zone, taille, booking);
     }
 }
