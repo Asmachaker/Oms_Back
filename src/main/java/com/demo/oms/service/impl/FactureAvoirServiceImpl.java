@@ -48,6 +48,13 @@ public class FactureAvoirServiceImpl implements FactureAvoirService {
     }
 
     @Override
+    public FactureAvoir FactureAvoir(Long id) {
+        Bordereau bor = bordereauService.getBordereau(id);
+        return factureAvoirRepository.getFactureByBordereau(bor);
+
+    }
+
+    @Override
     public List<FactureAvoir> getAllFactureAvoir() {
         return factureAvoirRepository.findAll();
     }
@@ -64,10 +71,13 @@ public class FactureAvoirServiceImpl implements FactureAvoirService {
         FactureAvoir factureAvoir = new FactureAvoir();
         factureAvoir.setClient(bordereau.getClient());
         factureAvoir.setStatut(false);
-        LocalDate now = LocalDate.now();
-        Date date = Date.valueOf(now);
+        Date date = Date.valueOf(LocalDate.now());
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        String Date= formatter.format(date);
         factureAvoir.setDate(date);
         factureAvoir.setBordereau(bordereau);
+        factureAvoir.setName(bordereau.getClient().getWorning()+"_"+Date);
+        //factureAvoirRepository.save(factureAvoir);
         Map<Float, Integer> tarifMap = new HashMap<>();
 
         for (Booking booking : bookings) {
@@ -108,44 +118,43 @@ public class FactureAvoirServiceImpl implements FactureAvoirService {
       }
       @Override
     public String exportReport(List<Booking> bookings, Long id) throws FileNotFoundException, JRException {
-        String path = "C:\\Users\\Asma\\Desktop\\Facture";
+        String path = "C:\\Users\\Asma\\Desktop\\PFE\\ngx-admin-master\\src\\assets\\documents\\factureAvoir";
         Map<Float, Integer> tarifList = generateFactureAvoir(bookings,id);
         Bordereau bordereau = bordereauService.getBordereau(id);
         Client client = clientRepository.findById(bordereau.getClient().getId()).get();
+        FactureAvoir factureAvoir = factureAvoirRepository.getFactureByBordereau(bordereau);
         List<FactureDTO> list = generateList(tarifList);
-        //load file and compile it
+
+          Double totalHT = calculTotal(list);
+          Double totalTva =(totalHT*19)/100;
+          Double total = totalTva+totalHT;
+          factureAvoir.setAmount(totalHT);
+          Date date = Date.valueOf(LocalDate.now());
+          SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+          String Date= formatter.format(date);
+
         File file = ResourceUtils.getFile("classpath:JasperReport/Facture.jrxml");
         JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
         JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(list);
         Map<String, Object> parameters = new HashMap<>();
 
-        Double totalHT = calculTotal(list);
-          Double totalTva =(totalHT*19)/100;
-          Double total = totalTva+totalHT;
-
-
-        Date date = Date.valueOf(LocalDate.now());
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-        String Date= formatter.format(date);
         parameters.put("date", Date );
         parameters.put("clientAdress",client.getWorning());
         parameters.put("clientNumber",client.getPhoneNumber());
         parameters.put("clientMatricule",client.getTaxNumber());
         parameters.put("clientName",client.getWorning());
+        parameters.put("facture","Facture d'avoir N°");
         parameters.put("totalHT",totalHT);
         parameters.put("Remise",0.0);
         parameters.put("totalHtRemise",totalHT);
         parameters.put("TVA",totalTva);
         parameters.put("total",total);
 
-
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
-          String DateClient= formatter.format(bordereau.getDate());
-
-            JasperExportManager.exportReportToPdfFile(jasperPrint, path + "\\"+client.getWorning()+"_"+DateClient+".pdf");
+        JasperExportManager.exportReportToPdfFile(jasperPrint, path + "\\"+factureAvoir.getName()+".pdf");
 
 
-        return "report generated in path : " + path;
+        return "report generated in path : ";
     }
 
 }

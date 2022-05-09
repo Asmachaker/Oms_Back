@@ -14,7 +14,6 @@ import java.time.LocalDate;
 import java.sql.Date;
 
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class BordereauServiceImpl implements BordereauService {
@@ -62,6 +61,30 @@ public class BordereauServiceImpl implements BordereauService {
             bordereau.setDate(nowSqlDate);
 
         }
+        return bordereauRepository.save(bordereau);
+    }
+
+    @Override
+    public Bordereau generateBordereauClient(Client client)
+    {
+        LocalDate now = LocalDate.now();
+        LocalDate LastDate = LocalDate.now().minusMonths(1).withDayOfMonth(1);
+        LocalDate FirstDate = LocalDate.now().withDayOfMonth(1);
+        Date nowSqlDate = Date.valueOf(FirstDate);
+        Date lastSqlDate = Date.valueOf(LastDate);
+        Bordereau bordereau= new Bordereau();
+            List<Booking> bookings=bookingRepository.getBookingByDate(client,lastSqlDate,nowSqlDate);
+            Long i= 1L;
+            for(Booking booking :bookings)
+            {
+                booking.setNumCommande(i);
+                i++;
+
+            }
+            bordereau.setClient(client);
+            bordereau.setBooking(bookings);
+            bordereau.setDate(nowSqlDate);
+
         return bordereauRepository.save(bordereau);
     }
 

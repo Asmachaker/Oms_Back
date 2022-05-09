@@ -3,12 +3,16 @@ package com.demo.oms.controller;
 import com.demo.oms.entity.Booking;
 import com.demo.oms.entity.Bordereau;
 import com.demo.oms.entity.Client;
+import com.demo.oms.entity.Facture;
 import com.demo.oms.service.BordereauService;
+import com.demo.oms.service.FactureService;
+import net.sf.jasperreports.engine.JRException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 
 @RestController
@@ -20,6 +24,9 @@ public class BordereauController {
     @Autowired
     private BordereauService bordereauService;
 
+    @Autowired
+    private FactureService factureService;
+
 
     @GetMapping("/getAllbordereaus")
     public ResponseEntity<List<Bordereau>> getAllBordereaus() {
@@ -29,11 +36,21 @@ public class BordereauController {
     }
 
     @GetMapping("/addbordereau")
-    public ResponseEntity<Bordereau> savebordereau() {
+    public ResponseEntity<String> savebordereau() throws JRException, FileNotFoundException {
        Bordereau bordereau= bordereauService.generateBordereau();
+       String res = factureService.exportReport(bordereau);
 
-        return new ResponseEntity<Bordereau>( bordereau,HttpStatus.CREATED);
+        return new ResponseEntity<>( res,HttpStatus.CREATED);
     }
+
+    @PostMapping("/addbordereauClient")
+    public ResponseEntity<String> savebordereauClient(@RequestBody Client client) throws JRException, FileNotFoundException {
+        Bordereau bordereau= bordereauService.generateBordereauClient(client);
+        String res = factureService.exportReport(bordereau);
+
+        return new ResponseEntity<>( res,HttpStatus.CREATED);
+    }
+
 
     @GetMapping("/GetBordereau/{id}")
     public ResponseEntity<Bordereau> GetBordereau(@PathVariable Long id) {

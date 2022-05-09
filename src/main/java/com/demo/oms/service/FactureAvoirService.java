@@ -15,6 +15,8 @@ public interface FactureAvoirService {
 
     FactureAvoir getFactureAvoir(Long id);
 
+    FactureAvoir FactureAvoir(Long id);
+
     List<FactureAvoir> getAllFactureAvoir();
 
     void EnableFactureAvoir(Long id);
