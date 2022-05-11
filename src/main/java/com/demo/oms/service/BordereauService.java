@@ -10,7 +10,7 @@ public interface BordereauService {
 
     Bordereau getBordereau(Long id);
 
-    Bordereau generateBordereau();
+    List<Bordereau> generateBordereau();
 
     Bordereau generateBordereauClient(Client client);
 

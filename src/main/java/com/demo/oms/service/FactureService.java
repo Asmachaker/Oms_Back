@@ -16,5 +16,7 @@ public interface FactureService {
 
     void EnableFacture(Long id);
 
-    String exportReport(Bordereau bordereau) throws FileNotFoundException, JRException;
+    void genererAllFacture(List<Bordereau> borList) throws JRException, FileNotFoundException;
+
+    void exportReport(Bordereau bordereau) throws FileNotFoundException, JRException;
 }

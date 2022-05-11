@@ -77,7 +77,7 @@ public class FactureAvoirServiceImpl implements FactureAvoirService {
         factureAvoir.setDate(date);
         factureAvoir.setBordereau(bordereau);
         factureAvoir.setName(bordereau.getClient().getWorning()+"_"+Date);
-        //factureAvoirRepository.save(factureAvoir);
+        factureAvoirRepository.save(factureAvoir);
         Map<Float, Integer> tarifMap = new HashMap<>();
 
         for (Booking booking : bookings) {
@@ -129,6 +129,7 @@ public class FactureAvoirServiceImpl implements FactureAvoirService {
           Double totalTva =(totalHT*19)/100;
           Double total = totalTva+totalHT;
           factureAvoir.setAmount(totalHT);
+          factureAvoirRepository.save(factureAvoir);
           Date date = Date.valueOf(LocalDate.now());
           SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
           String Date= formatter.format(date);

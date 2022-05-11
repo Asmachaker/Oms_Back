@@ -3,6 +3,7 @@ package com.demo.oms.service.impl;
 
 import com.demo.oms.dto.FactureDTO;
 import com.demo.oms.entity.*;
+import com.demo.oms.repository.ClientRepository;
 import com.demo.oms.repository.FactureAvoirRepository;
 import com.demo.oms.repository.FactureRepository;
 import com.demo.oms.service.FactureService;
@@ -27,6 +28,9 @@ public class FactureServiceImpl implements FactureService {
 
     @Autowired
     FactureRepository factureRepository;
+
+    @Autowired
+    ClientRepository clientRepository;
 
     @Autowired
     FactureAvoirRepository factureAvoirRepository;
@@ -63,7 +67,7 @@ public class FactureServiceImpl implements FactureService {
         facture.setDate(date);
         facture.setBordereau(bordereau);
         facture.setName("F"+bordereau.getClient().getWorning()+"_"+Date);
-        //factureRepository.save(facture);
+        factureRepository.save(facture);
         Map<Float, Integer> tarifMap = new HashMap<>();
         List <Booking> bookings = bordereau.getBooking();
         for (Booking booking : bookings) {
@@ -104,7 +108,15 @@ public class FactureServiceImpl implements FactureService {
     }
 
     @Override
-    public String exportReport(Bordereau bordereau) throws FileNotFoundException, JRException {
+    public void genererAllFacture(List<Bordereau> borList) throws JRException, FileNotFoundException {
+        for( Bordereau e :borList) {
+            exportReport(e);
+        }
+
+    }
+
+    @Override
+    public void exportReport(Bordereau bordereau) throws FileNotFoundException, JRException {
         String path = "C:\\Users\\Asma\\Desktop\\PFE\\ngx-admin-master\\src\\assets\\documents\\facture";
         Map<Float, Integer> tarifList = generateFacture(bordereau);
         Client client =bordereau.getClient();
@@ -141,7 +153,6 @@ public class FactureServiceImpl implements FactureService {
         JasperExportManager.exportReportToPdfFile(jasperPrint, path + "\\"+facture.getName()+".pdf");
 
 
-        return "report generated in path : ";
     }
 
 }

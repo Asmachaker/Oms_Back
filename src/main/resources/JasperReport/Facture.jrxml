@@ -38,7 +38,7 @@
         <property name="com.jaspersoft.studio.field.tree.path" value="ORDERS"/>
     </field>
     <background>
-        <band splitType="Stretch"/>
+        <band height="6" splitType="Stretch"/>
     </background>
     <title>
         <band height="148" splitType="Stretch">
@@ -104,7 +104,7 @@ Adresse : Pôle Technologique, Smart Tunisian Technoparks
                 <textFieldExpression><![CDATA[$P{date}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="392" y="87" width="78" height="18" uuid="9b24b2fa-ec84-4402-8c42-90aa7b76c382"/>
+                <reportElement x="406" y="86" width="78" height="18" uuid="9b24b2fa-ec84-4402-8c42-90aa7b76c382"/>
                 <textFieldExpression><![CDATA[$P{facture}]]></textFieldExpression>
             </textField>
         </band>
@@ -236,9 +236,9 @@ Adresse : Pôle Technologique, Smart Tunisian Technoparks
         </band>
     </columnHeader>
     <detail>
-        <band height="125" splitType="Stretch">
+        <band height="20" splitType="Stretch">
             <textField>
-                <reportElement x="0" y="0" width="141" height="30" isRemoveLineWhenBlank="true" uuid="276377be-759e-4fce-b41e-4abd7183cec7">
+                <reportElement x="0" y="0" width="141" height="20" isRemoveLineWhenBlank="true" uuid="276377be-759e-4fce-b41e-4abd7183cec7">
                     <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="cffcc990-8e75-48da-b0d3-34e0f24eea14"/>
                 </reportElement>
                 <box>
@@ -251,7 +251,7 @@ Adresse : Pôle Technologique, Smart Tunisian Technoparks
                 <textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="141" y="0" width="138" height="30" isRemoveLineWhenBlank="true" uuid="64331729-e930-4401-a1b1-1cb93b803cec">
+                <reportElement x="141" y="0" width="138" height="20" isRemoveLineWhenBlank="true" uuid="64331729-e930-4401-a1b1-1cb93b803cec">
                     <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="bc4a4fe0-4b6c-4bbf-9e91-dc12705a0f63"/>
                 </reportElement>
                 <box>
@@ -264,7 +264,7 @@ Adresse : Pôle Technologique, Smart Tunisian Technoparks
                 <textFieldExpression><![CDATA[$F{quantity}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="279" y="0" width="138" height="30" isRemoveLineWhenBlank="true" uuid="df5e2027-e0f2-4e57-b1f0-7d84a0f7c541">
+                <reportElement x="279" y="0" width="138" height="20" isRemoveLineWhenBlank="true" uuid="df5e2027-e0f2-4e57-b1f0-7d84a0f7c541">
                     <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="6bf7abdf-9289-49e3-8358-1d0d774283fd"/>
                 </reportElement>
                 <box>
@@ -277,7 +277,7 @@ Adresse : Pôle Technologique, Smart Tunisian Technoparks
                 <textFieldExpression><![CDATA[$F{prix}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="417" y="0" width="138" height="30" isRemoveLineWhenBlank="true" uuid="c761571e-e565-4cb0-9f56-5018699b4656">
+                <reportElement x="417" y="0" width="138" height="20" isRemoveLineWhenBlank="true" uuid="c761571e-e565-4cb0-9f56-5018699b4656">
                     <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="655afc8a-b210-480d-a1e5-47abe1c6e4c9"/>
                 </reportElement>
                 <box>
@@ -295,7 +295,7 @@ Adresse : Pôle Technologique, Smart Tunisian Technoparks
         <band height="45" splitType="Stretch"/>
     </columnFooter>
     <pageFooter>
-        <band height="151" splitType="Stretch">
+        <band height="210" splitType="Stretch">
             <rectangle>
                 <reportElement x="7" y="40" width="202" height="109" uuid="175822eb-b9c4-48e3-bfff-d2ab4e92a64c"/>
             </rectangle>
@@ -358,20 +358,19 @@ Adresse : Pôle Technologique, Smart Tunisian Technoparks
                 <reportElement x="7" y="41" width="100" height="30" uuid="f29fda9d-a751-4df3-bbdb-49785493f02e"/>
                 <text><![CDATA[Signature et cachet:]]></text>
             </staticText>
-        </band>
-    </pageFooter>
-    <summary>
-        <band height="72" splitType="Stretch">
             <rectangle>
-                <reportElement x="20" y="20" width="509" height="40" forecolor="#E0E0E0" backcolor="#E0E0E0" uuid="64a66bb6-5777-4531-b21e-b7220000e555"/>
+                <reportElement x="20" y="169" width="509" height="40" forecolor="#E0E0E0" backcolor="#E0E0E0" uuid="64a66bb6-5777-4531-b21e-b7220000e555"/>
             </rectangle>
             <staticText>
-                <reportElement x="176" y="30" width="196" height="30" uuid="0c9865dc-4b10-47c2-a41f-b700f39d4cfe"/>
+                <reportElement x="190" y="174" width="196" height="30" uuid="0c9865dc-4b10-47c2-a41f-b700f39d4cfe"/>
                 <textElement>
                     <font size="11"/>
                 </textElement>
                 <text><![CDATA[MERCI POUR VOTRE AFFAIRE]]></text>
             </staticText>
         </band>
+    </pageFooter>
+    <summary>
+        <band height="2" splitType="Stretch"/>
     </summary>
 </jasperReport>

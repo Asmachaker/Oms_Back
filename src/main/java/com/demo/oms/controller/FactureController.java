@@ -2,6 +2,7 @@ package com.demo.oms.controller;
 
 import com.demo.oms.entity.Facture;
 import com.demo.oms.entity.Taille;
+import com.demo.oms.repository.FactureRepository;
 import com.demo.oms.service.FactureService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,8 @@ public class FactureController {
     @Autowired
     private FactureService factureService;
 
+    @Autowired
+    private FactureRepository factureRepository;
 
     public FactureController(FactureService factureService) {
 
@@ -45,6 +48,13 @@ public class FactureController {
         Facture facture= factureService.getFacture(id);
         return new ResponseEntity<>(facture, HttpStatus.OK);
     }
+
+    @PostMapping("/deleteFacture/{id}")
+    public ResponseEntity<?> deleteFacture(@PathVariable Long id) {
+
+        factureRepository.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.CREATED);}
+
 
     @PostMapping("/EnableFacture/{id}")
     public ResponseEntity<?> EnableFacture(@PathVariable Long id) {
