@@ -27,6 +27,7 @@ public class AppUser{
     private Long phoneNumber;
     private String address;
     @Enumerated(EnumType.STRING)
+    @Column(updatable=false)
     private AppUserRole appUserRole;
     private Boolean enabled = false;
 

@@ -52,12 +52,12 @@ public class EmailServiceImpl implements UserService.EmailService {
         mailSender.send(mimeMessage);
     }
 
-    public void ActivationMail (String email, String name) throws MessagingException {
+    public void ActivationMail (String email, String name ,String username) throws MessagingException {
       MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage,true);
        // InternetAddress addressFrom = new InternetAddress(from);
         helper.setFrom("chekerasma10@gmail.com");
-        String url = "http://localhost:8888/auth/activate";
+        String url = "http://localhost:8888/auth/activate/"+username;;
         helper.setText("Welcome to the team", name);
         helper.setText(url); // Use this or above line.
         helper.setTo(email);

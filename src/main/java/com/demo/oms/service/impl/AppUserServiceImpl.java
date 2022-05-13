@@ -45,7 +45,7 @@ public class AppUserServiceImpl implements UserService {
     @Override
     public void addAdmin(AppUser appUser) {
       String Email = appUser.getEmail();
-        try {  emailService.ActivationMail(Email, appUser.getFirstName());
+        try {  emailService.ActivationMail(Email, appUser.getFirstName(), appUser.getUsername());
         } catch (MessagingException e) {
             e.printStackTrace();
         }
@@ -59,7 +59,7 @@ public class AppUserServiceImpl implements UserService {
             appUserRepository.enableAppUser(id);
           AppUser user =appUserRepository.findById(id).get();
             String Email = user.getEmail();
-            try {  emailService.ActivationMail(Email, user.getFirstName());
+            try {  emailService.ActivationMail(Email, user.getFirstName(), user.getUsername());
             } catch (MessagingException e) {
                 e.printStackTrace();
             }
@@ -83,7 +83,7 @@ public class AppUserServiceImpl implements UserService {
 
     @Override
     public List<AppUser> getAllUsers() {
-        return appUserRepository.findAll();
+        return appUserRepository.getUser();
     }
 
     @Override
@@ -94,6 +94,7 @@ public class AppUserServiceImpl implements UserService {
 
     @Override
     public void UpdateUser(AppUser user) {
+
         appUserRepository.save(user);
     }
     @Override
@@ -145,15 +146,16 @@ public class AppUserServiceImpl implements UserService {
 
     @Override
     public UserTokenDTO createJwtToken(UserLoginDTO userLoginDTO)  {
+        String jwt = "";
         String userName = userLoginDTO.getUsername();
         String userPassword = userLoginDTO.getPassword();
-        String jwt = authenticate(userLoginDTO);
-
         AppUser user =appUserRepository.findById(userName).get();
+        if(user.getEnabled() == true) {
+         jwt = authenticate(userLoginDTO);}
 
 
-        UserTokenDTO userTokenDTO =new UserTokenDTO(jwt,user.getUsername(),user.getFirstName(),user.getLastName(),user.getEmail()
-                ,user.getPassword(),user.getPhoneNumber(),user.getAddress(),user.getAppUserRole().getAuthority(),user.getEnabled());
+    UserTokenDTO userTokenDTO = new UserTokenDTO(jwt, user.getUsername(), user.getFirstName(), user.getLastName(), user.getEmail()
+            , user.getPassword(), user.getPhoneNumber(), user.getAddress(), user.getAppUserRole().getAuthority(), user.getEnabled());
 
 
         return userTokenDTO;

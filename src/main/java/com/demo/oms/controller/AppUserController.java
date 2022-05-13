@@ -51,7 +51,7 @@ public class AppUserController {
     }
 
     @GetMapping("/GetMdp/{id}")
-    public ResponseEntity<String> getOldPassword( @PathVariable String id) {
+    public ResponseEntity<String> getOldPassword(@PathVariable String id) {
 
         String enabled = appUserService.GetOldPassword(id);
         return new ResponseEntity<>(enabled, HttpStatus.OK);

@@ -1,6 +1,7 @@
 package com.demo.oms.repository;
 
 import com.demo.oms.entity.AppUser;
+import com.demo.oms.entity.Client;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -48,6 +49,9 @@ public interface AppUserRepository extends JpaRepository<AppUser, String> {
     @Query("SELECT username FROM AppUser WHERE email = ?1")
     String emailSearch(String id);
 
+    @Transactional
+    @Query("SELECT u FROM AppUser u WHERE u.appUserRole = 'USER'")
+    List<AppUser> getUser();
 
 //    @Transactional
 //    @Query("SELECT * " +
