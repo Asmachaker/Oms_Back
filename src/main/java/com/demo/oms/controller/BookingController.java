@@ -1,15 +1,20 @@
 package com.demo.oms.controller;
 
 
-import com.demo.oms.dto.BookingDTO;
+import com.demo.oms.dto.*;
 import com.demo.oms.entity.Booking;
 import com.demo.oms.entity.Client;
+import com.demo.oms.repository.BookingRepository;
 import com.demo.oms.service.BookingService;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -20,6 +25,10 @@ public class BookingController {
 
     @Autowired
     private BookingService bookingService;
+
+
+    @Autowired
+    private BookingRepository bookingrep;
 
 
 
@@ -57,6 +66,41 @@ public class BookingController {
         return new ResponseEntity<>( booking,HttpStatus.CREATED);
     }
 
+
+    @GetMapping("/bookingChart")
+    public ResponseEntity<List<BookingChartDTO>> booking() {
+  //List<Booking> book=  bookingrep.getBookingBydate(Date.valueOf(LocalDate.now().minusMonths(1).withDayOfMonth(18)),Date.valueOf(LocalDate.now().minusMonths(1).withDayOfMonth(19)));
+
+        return new ResponseEntity<>(bookingService.chartBooking(),HttpStatus.CREATED);
+    }
+
+
+    @GetMapping("/ReplanLivreur/{id}")
+    public ResponseEntity<Date> ReplanLivreur(@PathVariable Long id) {
+      return new ResponseEntity<>(bookingService.ReplanLivreur(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/ReplanClient/{id}")
+    public ResponseEntity<String> ReplanClient(@PathVariable Long id) {
+        return new ResponseEntity<>(bookingService.ReplanClient(id), HttpStatus.OK);
+    }
+    @GetMapping("/ReplanOms/{id}")
+    public ResponseEntity<String> ReplanOms(@PathVariable Long id) {
+        return new ResponseEntity<>(bookingService.ReplanClient(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/clientChart")
+    public ResponseEntity<List<BookingClientDTO>> clientBooking() {
+        //List<Booking> book=  bookingrep.getBookingBydate(Date.valueOf(LocalDate.now().minusMonths(1).withDayOfMonth(18)),Date.valueOf(LocalDate.now().minusMonths(1).withDayOfMonth(19)));
+
+        return new ResponseEntity<>(bookingService.chartClient(),HttpStatus.CREATED);
+    }
+    @GetMapping("/zoneChart")
+    public ResponseEntity<List<BookingZoneDTO>> zoneBooking() {
+        //List<Booking> book=  bookingrep.getBookingBydate(Date.valueOf(LocalDate.now().minusMonths(1).withDayOfMonth(18)),Date.valueOf(LocalDate.now().minusMonths(1).withDayOfMonth(19)));
+
+        return new ResponseEntity<>(bookingService.chartZone(),HttpStatus.CREATED);
+    }
 
 
 

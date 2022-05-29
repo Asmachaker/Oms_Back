@@ -29,16 +29,16 @@ public class Generator {
     private BordereauRepository bordereauRepo;
 
 
-    @Scheduled(cron = "0 2 1 * * ?")
-    public void bordereauGenerator() {
-       List<Bordereau> bordereau = bordereauService.generateBordereau();
-    }
+//    @Scheduled(cron = "0 2 1 * * ?")
+//    public void bordereauGenerator() {
+//       List<Bordereau> bordereau = bordereauService.generateBordereau();
+//    }
+//
+//    @Scheduled(cron = "0 3 1 * * ?")
+//    public void factureGenerator() throws JRException, FileNotFoundException {
+// Date now = Date.valueOf(LocalDate.now());
+//        List <Bordereau> bordereaus =bordereauRepo.getBordereauBydate(now);
+//        factureService.genererAllFacture(bordereaus);
 
-    @Scheduled(cron = "0 3 1 * * ?")
-    public void factureGenerator() throws JRException, FileNotFoundException {
- Date now = Date.valueOf(LocalDate.now());
-        List <Bordereau> bordereaus =bordereauRepo.getBordereauBydate(now);
-        factureService.genererAllFacture(bordereaus);
-
-    }
+ //   }
 }

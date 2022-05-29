@@ -1,11 +1,11 @@
 package com.demo.oms.entity;
 
+import com.demo.oms.dto.ElasticDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 public class Booking {
@@ -29,13 +29,22 @@ public class Booking {
     private String trackingCode  ;
     private String statut;
 
-    @Column(updatable=false)
-    @JsonFormat(shape= JsonFormat.Shape.STRING,pattern="yyyy-MM-dd hh:mm:ss")
+
+    @JsonFormat(shape= JsonFormat.Shape.STRING,pattern="yyyy-MM-dd")
     private Date date;
     private Long idBox;
     private String colone;
     private String StationName;
     private Long idStation;
+    private String shift;
+
+    public String getShift() {
+        return shift;
+    }
+
+    public void setShift(String shift) {
+        this.shift = shift;
+    }
 
     public Date getDate() {
         return date;
@@ -108,6 +117,14 @@ public class Booking {
 
     public void setIdBox(Long idBox) {
         this.idBox = idBox;
+    }
+
+
+
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(date);
     }
 
     public String getColone() {

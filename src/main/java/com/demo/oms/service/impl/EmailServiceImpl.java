@@ -1,9 +1,13 @@
 package com.demo.oms.service.impl;
 
+import com.demo.oms.entity.Client;
+import com.demo.oms.entity.Facture;
+import com.demo.oms.entity.FactureAvoir;
 import com.demo.oms.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -11,6 +15,9 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.io.File;
+import java.sql.Date;
+import java.time.LocalDate;
 
 @Service
 public class EmailServiceImpl implements UserService.EmailService {
@@ -55,7 +62,6 @@ public class EmailServiceImpl implements UserService.EmailService {
     public void ActivationMail (String email, String name ,String username) throws MessagingException {
       MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage,true);
-       // InternetAddress addressFrom = new InternetAddress(from);
         helper.setFrom("chekerasma10@gmail.com");
         String url = "http://localhost:8888/auth/activate/"+username;;
         helper.setText("Welcome to the team", name);
@@ -64,50 +70,35 @@ public class EmailServiceImpl implements UserService.EmailService {
 
         helper.setSubject("Activation Email");
         mailSender.send(mimeMessage);
-    }}
+    }
+
+    public void ClientEmail (FactureAvoir facture, Client client) throws Exception {
+
+        String path ="C:\\Users\\Asma\\Desktop\\PFE\\ngx-admin-master\\src\\assets\\documents\\factureAvoir\\"+facture.getName();
+
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+
+        MimeMessageHelper helper = getHelper(path, mimeMessage);
+        helper.setTo(client.getEmail());
+        helper.setSubject("Facture");
+        helper.setFrom("chekerasma10@gmail.com");
+        mailSender.send(mimeMessage);
+
+    }
 
 
-//    public void ClientEmail (String path, Account account) throws Exception {
-//
-//        Context context = getContext("Visit Website");
-//        context.setVariable("user", account.getClient().getUser().getFirstName() + " " + account.getClient().getUser().getLastName().toUpperCase());
-//        context.setVariable("message", "Your Extract was successfully treated on " +
-//                new Date() + " ");
-//        String url = "http://localhost:4200/";
-//        context.setVariable("link", url);
-//        String msg = templateEngine.process("mailTemplate", context);
-//
-//        MimeMessage mimeMessage = mailSender.createMimeMessage();
-//
-//        MimeMessageHelper helper = getHelper(path, msg, mimeMessage);
-//        helper.setTo(account.getClient().getUser().getEmail());
-//        helper.setSubject("banking transactions");
-//        helper.setFrom(env.getProperty("support.email"));
-//        mailSender.send(mimeMessage);
-//
-//    }
-//
-//
-//    private MimeMessageHelper getHelper(String path, String msg, MimeMessage mimeMessage) throws MessagingException {
-//        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "utf-8");
-//        helper.setText(msg, true);
-//        helper.addInline("logo", new ClassPathResource("img/emailimg.png"));
-//
-//        File attach = new File(path);
-//        helper.addAttachment(attach.getName(), attach);
-//
-//        return helper;
-//    }
-//
-//    private Context getContext(String textB) {
-//        Context context = new Context();
-//        context.setVariable("Appname", "Banking");
-//        context.setVariable("hello", "Hello");
-//        context.setVariable("textbutton", textB);
-//        return context;
-//    }
-//
-//
-//}
-//
-//}
+    private MimeMessageHelper getHelper(String path, MimeMessage mimeMessage) throws MessagingException {
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "utf-8");
+        Date now = Date.valueOf(LocalDate.now());
+        File attach = new File(path);
+        helper.addAttachment(attach.getName(), attach);
+        helper.setText("Voila la facture de"+now);
+        return helper;
+    }
+
+
+}
+
+
+
+

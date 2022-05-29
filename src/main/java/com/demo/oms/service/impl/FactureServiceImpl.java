@@ -127,6 +127,7 @@ public class FactureServiceImpl implements FactureService {
         Double totalTva =(totalHT*19)/100;
         Double total = totalTva+totalHT;
         facture.setAmount(totalHT);
+        factureRepository.save(facture);
         Date date = Date.valueOf(LocalDate.now());
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
         String Date= formatter.format(date);

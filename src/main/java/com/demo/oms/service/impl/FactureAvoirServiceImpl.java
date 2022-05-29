@@ -35,6 +35,9 @@ public class FactureAvoirServiceImpl implements FactureAvoirService {
     @Autowired
     ClientRepository clientRepository;
 
+    @Autowired
+    EmailServiceImpl emailService;
+
 
     @Override
     public void addFactureAvoir(FactureAvoir factureAvoir) {
@@ -123,7 +126,7 @@ public class FactureAvoirServiceImpl implements FactureAvoirService {
         Bordereau bordereau = bordereauService.getBordereau(id);
         Client client = clientRepository.findById(bordereau.getClient().getId()).get();
         FactureAvoir factureAvoir = factureAvoirRepository.getFactureByBordereau(bordereau);
-        List<FactureDTO> list = generateList(tarifList);
+          List<FactureDTO> list = generateList(tarifList);
 
           Double totalHT = calculTotal(list);
           Double totalTva =(totalHT*19)/100;

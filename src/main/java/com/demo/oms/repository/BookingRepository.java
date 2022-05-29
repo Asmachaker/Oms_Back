@@ -1,6 +1,7 @@
 package com.demo.oms.repository;
 
 import com.demo.oms.entity.Booking;
+import com.demo.oms.entity.Bordereau;
 import com.demo.oms.entity.Client;
 import com.demo.oms.entity.CodePostal;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -22,4 +23,10 @@ public interface BookingRepository extends JpaRepository<Booking,Long> {
             @Param("client") Client client,
             @Param("LastDate") Date lastDate,
             @Param("DateNow") Date nowDate);
+
+    @Transactional
+    @Query("SELECT u FROM Booking u WHERE u.date BETWEEN :DateNow and :Date")
+    List<Booking> getBookingBydate(
+            @Param("DateNow") Date nowDate,
+            @Param("Date") Date Date);
 }

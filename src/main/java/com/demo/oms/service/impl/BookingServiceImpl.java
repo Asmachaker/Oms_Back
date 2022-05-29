@@ -1,7 +1,7 @@
 package com.demo.oms.service.impl;
 
 
-import com.demo.oms.dto.BookingDTO;
+import com.demo.oms.dto.*;
 import com.demo.oms.entity.*;
 import com.demo.oms.repository.*;
 import com.demo.oms.service.BookingService;
@@ -11,9 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class BookingServiceImpl implements BookingService {
@@ -64,6 +66,8 @@ public class BookingServiceImpl implements BookingService {
         return bookings;
     }
 
+
+
     @Override
     public Booking confirmBooking (BookingDTO bookingDTO)
     {
@@ -87,6 +91,193 @@ public class BookingServiceImpl implements BookingService {
 
         return  booking;
     }
+    public BookingChartDTO calcul(List<Booking> bookingList,Date date)
+    {
+        Integer i=0;
+        for(Booking e:bookingList)
+        {
+            i=i+1;
+
+        }
+       return new BookingChartDTO(i,date);
+
+    }
+
+    @Override
+    public List<BookingClientDTO> chartClient(){
+        List<Client> clientList = clientRepository.getEnabledClient();
+        List<BookingClientDTO> list = new ArrayList<BookingClientDTO>();
+
+        for (Client c : clientList) {
+            Date Day0 = Date.valueOf(LocalDate.now().plusDays(1));
+            Date Day = Date.valueOf(LocalDate.now().withDayOfMonth(1));
+            List<Booking> bookingList = bookingRepository.getBookingByDate(c,Day,Day0);
+            Integer i=0;
+            for(Booking b : bookingList){
+                i=i+1;
+            }
+            BookingClientDTO booking = new BookingClientDTO(c,i);
+            list.add(booking);
+        }
+        return list;
+    }
 
 
+@Override
+    public List<BookingChartDTO> chartBooking(){
+
+        List<BookingChartDTO> list = new ArrayList<BookingChartDTO>();
+//        Date Day0 = Date.valueOf(LocalDate.now().plusDays(1));
+//        Date LastDay = Date.valueOf(LocalDate.now().minusDays(1));
+//        Date day2 = Date.valueOf(LocalDate.now().minusDays(2));
+//        Date day3 = Date.valueOf(LocalDate.now().minusDays(3));
+    Date Day0 = Date.valueOf(LocalDate.now().minusDays(2));
+    Date LastDay = Date.valueOf(LocalDate.now().minusDays(3));
+    Date day2 = Date.valueOf(LocalDate.now().minusDays(4));
+    Date day3 = Date.valueOf(LocalDate.now().minusDays(5));
+        Date now = Date.valueOf(LocalDate.now());
+        List<Booking> bookingListnnow =bookingRepository.getBookingBydate(now,Day0);
+        List<Booking> bookingListLast =bookingRepository.getBookingBydate(LastDay,now);
+        List<Booking> bookingList2 =bookingRepository.getBookingBydate(day2,LastDay);
+        List<Booking> bookingList3 =bookingRepository.getBookingBydate(day3,day2);
+
+       list.add(calcul(bookingListnnow,now));
+       list.add(calcul(bookingListLast,LastDay));
+       list.add(calcul(bookingList2,day2));
+       list.add(calcul(bookingList3,day3));
+
+
+     return list;
+    }
+@Override
+    public Boolean ReplanNow(Booking booking)
+    {   boolean book=false;
+
+        List<ElasticDTO> elastic =new ArrayList<ElasticDTO>();
+        Date Day0 = Date.valueOf(LocalDate.now().plusDays(1));
+
+        Date Day2 = Date.valueOf(LocalDate.now().plusDays(2));
+        elastic.add(new ElasticDTO(100L,7L,Day0,"Matin"));
+       elastic.add(new ElasticDTO(100L,4L,Day2,"Nuit"));
+       for(ElasticDTO b :elastic)
+       {
+                if (b.getIdStation().equals(booking.getIdStation())) {
+                    SimpleDateFormat DateFor = new SimpleDateFormat("dd/MM/yyyy");
+                    String DateElastic= DateFor.format(booking.getDate());
+                    String DateBooking= DateFor.format(b.getDate());
+
+                    if (DateElastic.equals(DateBooking)) {
+                        if (b.getShift().equals(booking.getShift())) {
+                            booking.setIdBox(b.getIdBox());
+                            book=true;
+
+                        }
+                    }
+                }
+              }
+          return book;
+         }
+
+
+        @Override
+        public java.util.Date ReplanLivreur(Long idBooking) {
+            java.util.Date data = null;
+             Calendar c = Calendar.getInstance();
+             boolean Replan = false;
+             Booking booking = bookingRepository.findById(idBooking).get();
+             String reponse;
+             if (ReplanNow(booking)) {
+                 reponse = "Replanification avec succés, Retapez ton delivery code";
+             } else {
+                 while (Replan == false) {
+                     if ((booking.getShift()) == "Matin") {
+                         booking.setShift("Nuit");
+                         Replan = ReplanNow(booking);
+                     } else {
+                         java.util.Date date =booking.getDate();
+                         c.setTime(date);
+                         c.add(Calendar.DATE, 1);
+                         data = c.getTime();
+                         booking.setDate(data);
+                         booking.setShift("Matin");
+                         Replan = ReplanNow(booking);
+                     }
+                 }
+                 reponse = "Ilya pas un box vide,le Booking est replanifié ";
+             }
+            booking.setDeliveryCode(CodeGenerator.getAlphaNumericString(8));
+            booking.setPickupCode(CodeGenerator.getAlphaNumericString(8));
+            booking.setTrackingCode(CodeGenerator.getAlphaNumericString(8));
+            bookingRepository.save(booking);
+
+            return c.getTime();
+       }
+
+    @Override
+    public String ReplanClient(Long idBooking) {
+        java.util.Date data = null;
+        Calendar c = null;
+        boolean Replan = false;
+        Booking booking = bookingRepository.findById(idBooking).get();
+        String reponse;
+
+            while (Replan == false) {
+                if ((booking.getShift()) == "Matin") {
+                    booking.setShift("Nuit");
+                    Replan = ReplanNow(booking);
+                } else {
+                    java.util.Date date =booking.getDate();
+                    c = Calendar.getInstance();
+                    c.setTime(date);
+                    c.add(Calendar.DATE, 1);
+                    data = c.getTime();
+                    booking.setDate(data);
+                    booking.setShift("Matin");
+                    Replan = ReplanNow(booking);
+                }
+            }
+            reponse = "le Booking est replanifié ";
+
+        c = Calendar.getInstance();
+        c.setTime(booking.getDate());
+        c.add(Calendar.DATE, 1);
+        java.util.Date date =c.getTime();
+        booking.setDate(date);
+        booking.setDeliveryCode(CodeGenerator.getAlphaNumericString(8));
+        booking.setPickupCode(CodeGenerator.getAlphaNumericString(8));
+        booking.setTrackingCode(CodeGenerator.getAlphaNumericString(8));
+        bookingRepository.save(booking);
+
+        return reponse;
+    }
+
+
+@Override
+public Booking bookingTest(Booking booking)
+{   Long i= 500L;
+    booking.setIdBox(i);
+    return booking;
+}
+
+@Override
+    public List<BookingZoneDTO> chartZone() {
+        List<Zone> zoneList = zoneRepository.findAll();
+        List<BookingZoneDTO> list = new ArrayList<BookingZoneDTO>();
+
+        for (Zone z : zoneList) {
+            Date Day0 = Date.valueOf(LocalDate.now().plusDays(1));
+            Date Day = Date.valueOf(LocalDate.now().withDayOfMonth(1));
+            List<Booking> bookingList = bookingRepository.getBookingBydate(Day,Day0);
+            Integer i=0;
+            for(Booking b : bookingList){
+                if (b.getTarif().getZone().getId() == z.getId())
+                i=i+1;
+            }
+            BookingZoneDTO booking = new BookingZoneDTO(z,i);
+            list.add(booking);
+        }
+        return list;
+
+
+    }
 }
