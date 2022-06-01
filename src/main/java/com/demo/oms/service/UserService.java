@@ -4,12 +4,13 @@ import com.demo.oms.entity.AppUser;
 import com.demo.oms.dto.UserLoginDTO;
 import com.demo.oms.dto.UserTokenDTO;
 
+import javax.mail.MessagingException;
 import java.util.List;
 
 public interface UserService {
 
 
-   void addAdmin(AppUser c);
+   void addAdmin(AppUser c) throws MessagingException;
 
     Boolean EnableUser(String id);
 

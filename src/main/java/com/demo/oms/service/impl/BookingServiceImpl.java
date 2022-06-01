@@ -8,7 +8,11 @@ import com.demo.oms.service.BookingService;
 import com.demo.oms.util.CodeGenerator;
 import com.demo.oms.util.Converter.BookingConverter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
@@ -41,7 +45,10 @@ public class BookingServiceImpl implements BookingService {
     @Autowired
     private TarifRepository tarifRepository;
 
-
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
     @Override
     public List<Booking> getAllBookings() {
         return bookingRepository.findAll();
@@ -123,7 +130,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
 
-@Override
+    @Override
     public List<BookingChartDTO> chartBooking(){
 
         List<BookingChartDTO> list = new ArrayList<BookingChartDTO>();
@@ -149,13 +156,14 @@ public class BookingServiceImpl implements BookingService {
 
      return list;
     }
-@Override
+
+
+    @Override
     public Boolean ReplanNow(Booking booking)
     {   boolean book=false;
 
         List<ElasticDTO> elastic =new ArrayList<ElasticDTO>();
         Date Day0 = Date.valueOf(LocalDate.now().plusDays(1));
-
         Date Day2 = Date.valueOf(LocalDate.now().plusDays(2));
         elastic.add(new ElasticDTO(100L,7L,Day0,"Matin"));
        elastic.add(new ElasticDTO(100L,4L,Day2,"Nuit"));
@@ -178,9 +186,51 @@ public class BookingServiceImpl implements BookingService {
           return book;
          }
 
+    @Override
+    public Boolean ReplanOms(Booking booking, java.util.Date date, String shift)
+    {boolean book=false;
+        String rep="";
+
+        List<ElasticDTO> elastic =new ArrayList<ElasticDTO>();
+        Date Day0 = Date.valueOf(LocalDate.now().plusDays(1));
+
+        Date Day2 = Date.valueOf(LocalDate.now().plusDays(2));
+        elastic.add(new ElasticDTO(100L,7L,Day0,"Matin"));
+        elastic.add(new ElasticDTO(100L,4L,Day2,"Nuit"));
+        for(ElasticDTO b :elastic)
+        {
+            if (b.getIdStation().equals(booking.getIdStation())) {
+                SimpleDateFormat DateFor = new SimpleDateFormat("dd/MM/yyyy");
+                String DateElastic= DateFor.format(date);
+                String DateBooking= DateFor.format(b.getDate());
+
+                if (DateElastic.equals(DateBooking)) {
+                    if (b.getShift().equals(shift)) {
+                        book=true;
+                        booking.setIdBox(b.getIdBox());
+                        booking.setShift(shift);
+                        booking.setDate(date);
+                        bookingRepository.save(booking);
+
+                    }
+                }
+            }
+        }
+        return book;
+    }
+
+    @Autowired
+    private RestTemplate restTemplate;
+
+    @Override
+    public ElasticDTO[] getBoxes() {
+        ResponseEntity resp = restTemplate.getForEntity("http://localhost:3000/box", ElasticDTO[].class);
+
+        return resp.getStatusCode() == HttpStatus.OK ? (ElasticDTO[]) resp.getBody() : null;
+    }
 
         @Override
-        public java.util.Date ReplanLivreur(Long idBooking) {
+        public String ReplanLivreur(Long idBooking) {
             java.util.Date data = null;
              Calendar c = Calendar.getInstance();
              boolean Replan = false;
@@ -210,7 +260,7 @@ public class BookingServiceImpl implements BookingService {
             booking.setTrackingCode(CodeGenerator.getAlphaNumericString(8));
             bookingRepository.save(booking);
 
-            return c.getTime();
+            return reponse;
        }
 
     @Override
@@ -237,12 +287,6 @@ public class BookingServiceImpl implements BookingService {
                 }
             }
             reponse = "le Booking est replanifié ";
-
-        c = Calendar.getInstance();
-        c.setTime(booking.getDate());
-        c.add(Calendar.DATE, 1);
-        java.util.Date date =c.getTime();
-        booking.setDate(date);
         booking.setDeliveryCode(CodeGenerator.getAlphaNumericString(8));
         booking.setPickupCode(CodeGenerator.getAlphaNumericString(8));
         booking.setTrackingCode(CodeGenerator.getAlphaNumericString(8));
@@ -252,12 +296,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
 
-@Override
-public Booking bookingTest(Booking booking)
-{   Long i= 500L;
-    booking.setIdBox(i);
-    return booking;
-}
+
 
 @Override
     public List<BookingZoneDTO> chartZone() {

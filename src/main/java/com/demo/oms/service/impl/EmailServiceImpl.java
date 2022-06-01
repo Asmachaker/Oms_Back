@@ -63,9 +63,10 @@ public class EmailServiceImpl implements UserService.EmailService {
       MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage,true);
         helper.setFrom("chekerasma10@gmail.com");
-        String url = "http://localhost:8888/auth/activate/"+username;;
-        helper.setText("Welcome to the team", name);
-        helper.setText(url); // Use this or above line.
+        String url = " Voila votre lien d'actication http://localhost:8888/auth/activate/"+username;
+        String url2 = "Votre Identifiant: "+username;
+        String url3 ="Welcome to the team";
+        helper.setText("Welcome to the team \n Votre Identifiant: "+username+"\n Voila votre lien d'actication http://localhost:8888/auth/activate/"+username);
         helper.setTo(email);
 
         helper.setSubject("Activation Email");

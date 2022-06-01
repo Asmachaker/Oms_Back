@@ -1,14 +1,11 @@
 package com.demo.oms.service;
 
-import com.demo.oms.dto.BookingChartDTO;
-import com.demo.oms.dto.BookingClientDTO;
-import com.demo.oms.dto.BookingDTO;
-import com.demo.oms.dto.BookingZoneDTO;
+import com.demo.oms.dto.*;
 import com.demo.oms.entity.Booking;
 import com.demo.oms.entity.Client;
 
+import java.sql.Date;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -29,11 +26,13 @@ public interface BookingService {
 
     Boolean ReplanNow(Booking booking);
 
-    Date ReplanLivreur(Long idBooking);
+    Boolean ReplanOms(Booking booking, java.util.Date date, String shift);
+
+    ElasticDTO[] getBoxes();
+
+    String ReplanLivreur(Long idBooking);
 
     String ReplanClient(Long idBooking);
-
-    Booking bookingTest(Booking booking);
 
     List<BookingZoneDTO> chartZone();
 }

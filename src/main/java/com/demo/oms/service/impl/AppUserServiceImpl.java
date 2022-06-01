@@ -43,12 +43,10 @@ public class AppUserServiceImpl implements UserService {
 
 
     @Override
-    public void addAdmin(AppUser appUser) {
-      String Email = appUser.getEmail();
-        try {  emailService.ActivationMail(Email, appUser.getFirstName(), appUser.getUsername());
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
+    public void addAdmin(AppUser appUser) throws MessagingException {
+        String Email = appUser.getEmail();
+        emailService.ActivationMail(Email, appUser.getFirstName(), appUser.getUsername());
+
 
         appUserRepository.save(appUser);
 

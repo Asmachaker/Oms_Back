@@ -76,7 +76,7 @@ public class BookingController {
 
 
     @GetMapping("/ReplanLivreur/{id}")
-    public ResponseEntity<Date> ReplanLivreur(@PathVariable Long id) {
+    public ResponseEntity<String> ReplanLivreur(@PathVariable Long id) {
       return new ResponseEntity<>(bookingService.ReplanLivreur(id), HttpStatus.OK);
     }
 
@@ -84,9 +84,10 @@ public class BookingController {
     public ResponseEntity<String> ReplanClient(@PathVariable Long id) {
         return new ResponseEntity<>(bookingService.ReplanClient(id), HttpStatus.OK);
     }
-    @GetMapping("/ReplanOms/{id}")
-    public ResponseEntity<String> ReplanOms(@PathVariable Long id) {
-        return new ResponseEntity<>(bookingService.ReplanClient(id), HttpStatus.OK);
+    @PostMapping("/ReplanOms")
+    public ResponseEntity<Boolean> ReplanOms(@RequestBody ReplanDTO replanDTO ) {
+        Booking booking =bookingrep.findById(replanDTO.getId()).get();
+        return new ResponseEntity<>(bookingService.ReplanOms(booking,replanDTO.getDate(),replanDTO.getShift()), HttpStatus.OK);
     }
 
     @GetMapping("/clientChart")
@@ -100,6 +101,14 @@ public class BookingController {
         //List<Booking> book=  bookingrep.getBookingBydate(Date.valueOf(LocalDate.now().minusMonths(1).withDayOfMonth(18)),Date.valueOf(LocalDate.now().minusMonths(1).withDayOfMonth(19)));
 
         return new ResponseEntity<>(bookingService.chartZone(),HttpStatus.CREATED);
+    }
+
+
+    @GetMapping("/box")
+    public ResponseEntity<ElasticDTO[]> box() {
+        //List<Booking> book=  bookingrep.getBookingBydate(Date.valueOf(LocalDate.now().minusMonths(1).withDayOfMonth(18)),Date.valueOf(LocalDate.now().minusMonths(1).withDayOfMonth(19)));
+
+        return new ResponseEntity<>(bookingService.getBoxes(),HttpStatus.CREATED);
     }
 
 
