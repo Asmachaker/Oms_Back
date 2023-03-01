@@ -1,6 +1,5 @@
 package com.demo.oms.service.impl;
 
-
 import com.demo.oms.security.MyUserDetailsService;
 import com.demo.oms.util.JwtTokenUtil;
 import com.demo.oms.entity.AppUser;
@@ -18,150 +17,135 @@ import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
 import java.util.List;
 
-
 @Service
 public class AppUserServiceImpl implements UserService {
 
-    @Autowired
-    private AppUserRepository appUserRepository;
+	@Autowired
+	private AppUserRepository appUserRepository;
 
-    @Autowired
-    private EmailServiceImpl emailService;
+	@Autowired
+	private EmailServiceImpl emailService;
 
+	@Autowired
+	private JwtTokenUtil jwtUtil;
 
+	@Autowired
+	private MyUserDetailsService jwtUserDetailsService;
 
-    @Autowired
-    private JwtTokenUtil jwtUtil;
+	@Autowired
+	private AuthenticationManager authenticationManager;
 
-    @Autowired
-    private MyUserDetailsService jwtUserDetailsService;
+	@Override
+	public void addAdmin(AppUser appUser) throws MessagingException {
+		String Email = appUser.getEmail();
+		emailService.ActivationMail(Email, appUser.getFirstName(), appUser.getUsername());
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+		appUserRepository.save(appUser);
 
+	}
 
+	@Override
+	public Boolean EnableUser(String id) {
+		appUserRepository.enableAppUser(id);
+		AppUser user = appUserRepository.findById(id).get();
+		String Email = user.getEmail();
+		try {
+			emailService.ActivationMail(Email, user.getFirstName(), user.getUsername());
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}
+		return true;
+	}
 
+	@Override
+	public Boolean disableUser(String id) {
+		appUserRepository.disableAppUser(id);
+		return true;
+	}
 
-    @Override
-    public void addAdmin(AppUser appUser) throws MessagingException {
-        String Email = appUser.getEmail();
-        emailService.ActivationMail(Email, appUser.getFirstName(), appUser.getUsername());
+	@Override
+	public boolean GetEnabledByuser(String id) {
+		return appUserRepository.userStatut(id);
+	}
 
+	@Override
+	public String GetOldPassword(String id) {
+		return appUserRepository.oldMdp(id);
+	}
 
-        appUserRepository.save(appUser);
+	@Override
+	public List<AppUser> getAllUsers() {
+		return appUserRepository.getUser();
+	}
 
-        }
+	@Override
+	public AppUser getUser(String id) {
 
-    @Override
-    public Boolean EnableUser(String id) {
-            appUserRepository.enableAppUser(id);
-          AppUser user =appUserRepository.findById(id).get();
-            String Email = user.getEmail();
-            try {  emailService.ActivationMail(Email, user.getFirstName(), user.getUsername());
-            } catch (MessagingException e) {
-                e.printStackTrace();
-            }
-         return true;
-        }
+		return appUserRepository.findById(id).get();
+	}
 
-    @Override
-    public Boolean disableUser(String id) {
-        appUserRepository.disableAppUser(id);
-    return true ;}
+	@Override
+	public void UpdateUser(AppUser user) {
 
-    @Override
-    public boolean GetEnabledByuser(String id) {
-        return appUserRepository.userStatut(id);
-    }
+		appUserRepository.save(user);
+	}
 
-    @Override
-    public String GetOldPassword(String id) {
-        return appUserRepository.oldMdp(id);
-    }
+	@Override
+	public void deleete(String id) {
+		appUserRepository.deleteById(id);
+	}
 
-    @Override
-    public List<AppUser> getAllUsers() {
-        return appUserRepository.getUser();
-    }
+	@Override
+	public void ResetPass(String id, String password) {
+		appUserRepository.resetPassword(password, id);
+	}
 
-    @Override
-    public AppUser getUser(String id) {
+	@Override
+	public boolean sendEmail(String email) {
+		boolean verify = false;
+		String username = appUserRepository.emailSearch(email);
+		if (username != null) {
+			try {
+				emailService.ResetPasswordMail(email, username);
+				verify = true;
+			} catch (MessagingException e) {
+				e.printStackTrace();
+			}
+		}
 
-        return appUserRepository.findById(id).get();
-    }
+		return verify;
+	}
 
-    @Override
-    public void UpdateUser(AppUser user) {
+	public String authenticate(UserLoginDTO userLoginDTO) {
 
-        appUserRepository.save(user);
-    }
-    @Override
-    public void deleete(String id) {
-        appUserRepository.deleteById(id);
-    }
+		try {
+			authenticationManager.authenticate(
+					new UsernamePasswordAuthenticationToken(userLoginDTO.getUsername(), userLoginDTO.getPassword()));
+		} catch (BadCredentialsException badCredentialsException) {
+			AppUser user = appUserRepository.findById(userLoginDTO.getUsername()).get();
+			throw new BadCredentialsException("Invalid password");
+		}
+		final UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(userLoginDTO.getUsername());
 
-    @Override
-    public void ResetPass(String id, String password) {
-        appUserRepository.resetPassword(password,id);
-    }
+		String jwt = jwtUtil.generateToken(userDetails);
+		return jwt;
+	}
 
+	@Override
+	public UserTokenDTO createJwtToken(UserLoginDTO userLoginDTO) {
+		String jwt = "";
+		String userName = userLoginDTO.getUsername();
+		String userPassword = userLoginDTO.getPassword();
+		AppUser user = appUserRepository.findById(userName).get();
+		if (user.getEnabled() == true) {
+			jwt = authenticate(userLoginDTO);
+		}
 
-    @Override
-    public boolean sendEmail(String email) {
-        boolean verify = false;
-      String username = appUserRepository.emailSearch(email);
-      if (username!=null)
-      { try {  emailService.ResetPasswordMail(email, username);
-          verify=true;}
-      catch (MessagingException e) {
-          e.printStackTrace();
-      }}
+		UserTokenDTO userTokenDTO = new UserTokenDTO(jwt, user.getUsername(), user.getFirstName(), user.getLastName(),
+				user.getEmail(), user.getPassword(), user.getPhoneNumber(), user.getAddress(),
+				user.getAppUserRole().getAuthority(), user.getEnabled());
 
+		return userTokenDTO;
+	}
 
-        return verify;
-    }
-
-
-
-
-    public String authenticate (UserLoginDTO userLoginDTO) {
-
-        try {
-             authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(userLoginDTO.getUsername(), userLoginDTO.getPassword()));
-        }
-        catch (BadCredentialsException badCredentialsException)
-        {
-            AppUser user = appUserRepository.findById(userLoginDTO.getUsername()).get();
-            throw new BadCredentialsException("Invalid password");
-        }
-       final UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(userLoginDTO.getUsername());
-
-        String jwt = jwtUtil.generateToken(userDetails);
-        return jwt;
-    }
-
-
-    @Override
-    public UserTokenDTO createJwtToken(UserLoginDTO userLoginDTO)  {
-        String jwt = "";
-        String userName = userLoginDTO.getUsername();
-        String userPassword = userLoginDTO.getPassword();
-        AppUser user =appUserRepository.findById(userName).get();
-        if(user.getEnabled() == true) {
-         jwt = authenticate(userLoginDTO);}
-
-
-    UserTokenDTO userTokenDTO = new UserTokenDTO(jwt, user.getUsername(), user.getFirstName(), user.getLastName(), user.getEmail()
-            , user.getPassword(), user.getPhoneNumber(), user.getAddress(), user.getAppUserRole().getAuthority(), user.getEnabled());
-
-
-        return userTokenDTO;
-    }
-
-
-
-    }
-
-
-
+}
