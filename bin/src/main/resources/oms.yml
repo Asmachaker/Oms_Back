@@ -1,0 +1,62 @@
+# Spring Boot configuration
+spring:
+  application:
+    name: oms  # Service registers under this name
+  profiles:
+    active: development
+  #EmailConfig
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: chekerasma10@gmail.com
+    password: nsitou123
+    protocol: smtp
+    properties.mail.smtp:
+      auth: true
+      starttls.enable: true
+  # Database
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/oms_db?createDatabaseIfNotExist=true
+    username: postgres
+    password: asma
+  # JPA properties
+  jpa:
+    hibernate:
+    ddl-auto: update
+    show-sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false
+    generate-ddl: true
+# Logger configuration
+logging:
+  pattern:
+    console: "%d %-5level %logger : %msg%n"
+  level:
+    org.springframework: INFO
+    tn.hitsolutions.qmanager: ERROR
+# Server configuration
+server:
+  port: 4000
+  sessionTimeout: 30
+# Security configuration
+security:
+  user:
+    name: user
+    password: user
+
+
+management:
+  context-path: /management
+  security:
+    enabled: false
+
+external-api:
+  url:
+    front-oms: http://localhost:4200
+
+jwt:
+  header: Authorization
+  secret: my-very-secret-key
+
