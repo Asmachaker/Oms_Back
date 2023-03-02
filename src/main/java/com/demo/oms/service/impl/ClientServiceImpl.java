@@ -18,6 +18,9 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public void addClient(Client client) {
+        if (client.getStatut() == null)
+            client.setStatut(true);
+            else client.setStatut(false);
        clientRepository.save(client);
 
     }

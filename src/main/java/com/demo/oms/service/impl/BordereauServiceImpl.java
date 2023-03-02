@@ -75,7 +75,7 @@ public class BordereauServiceImpl implements BordereauService {
     {
         LocalDate now = LocalDate.now();
         LocalDate LastDate = LocalDate.now().minusMonths(1).withDayOfMonth(1);
-        LocalDate FirstDate = LocalDate.now().withDayOfMonth(1);
+        LocalDate FirstDate = LocalDate.now().plusDays(1);
         Date nowSqlDate = Date.valueOf(FirstDate);
         Date lastSqlDate = Date.valueOf(LastDate);
         Bordereau bordereau= new Bordereau();
@@ -90,7 +90,7 @@ public class BordereauServiceImpl implements BordereauService {
             }
             bordereau.setClient(client);
             bordereau.setBooking(bookings);
-            bordereau.setDate(nowSqlDate);
+            bordereau.setDate(Date.valueOf(now));
 
         return bordereauRepository.save(bordereau);
     }

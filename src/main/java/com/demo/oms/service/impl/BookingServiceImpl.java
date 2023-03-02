@@ -87,6 +87,7 @@ public class BookingServiceImpl implements BookingService {
 
        Booking booking = BookingConverter.convertDtoToEntity(bookingDTO);
        booking.setClient(client);
+       booking.setShift(bookingDTO.getShift());
        booking.setTarif(tarif);
        booking.setStatut("Pas Achevé");
        booking.setDeliveryCode(CodeGenerator.getAlphaNumericString(8));
@@ -134,14 +135,14 @@ public class BookingServiceImpl implements BookingService {
     public List<BookingChartDTO> chartBooking(){
 
         List<BookingChartDTO> list = new ArrayList<BookingChartDTO>();
-//        Date Day0 = Date.valueOf(LocalDate.now().plusDays(1));
-//        Date LastDay = Date.valueOf(LocalDate.now().minusDays(1));
-//        Date day2 = Date.valueOf(LocalDate.now().minusDays(2));
-//        Date day3 = Date.valueOf(LocalDate.now().minusDays(3));
-    Date Day0 = Date.valueOf(LocalDate.now().minusDays(2));
-    Date LastDay = Date.valueOf(LocalDate.now().minusDays(3));
-    Date day2 = Date.valueOf(LocalDate.now().minusDays(4));
-    Date day3 = Date.valueOf(LocalDate.now().minusDays(5));
+        Date Day0 = Date.valueOf(LocalDate.now().plusDays(1));
+        Date LastDay = Date.valueOf(LocalDate.now().minusDays(1));
+        Date day2 = Date.valueOf(LocalDate.now().minusDays(2));
+        Date day3 = Date.valueOf(LocalDate.now().minusDays(3));
+//    Date Day0 = Date.valueOf(LocalDate.now().minusDays(2));
+//    Date LastDay = Date.valueOf(LocalDate.now().minusDays(3));
+//    Date day2 = Date.valueOf(LocalDate.now().minusDays(4));
+//    Date day3 = Date.valueOf(LocalDate.now().minusDays(5));
         Date now = Date.valueOf(LocalDate.now());
         List<Booking> bookingListnnow =bookingRepository.getBookingBydate(now,Day0);
         List<Booking> bookingListLast =bookingRepository.getBookingBydate(LastDay,now);
@@ -193,10 +194,11 @@ public class BookingServiceImpl implements BookingService {
 
         List<ElasticDTO> elastic =new ArrayList<ElasticDTO>();
         Date Day0 = Date.valueOf(LocalDate.now().plusDays(1));
-
+        Date Day = Date.valueOf(LocalDate.now());
         Date Day2 = Date.valueOf(LocalDate.now().plusDays(2));
         elastic.add(new ElasticDTO(100L,7L,Day0,"Matin"));
         elastic.add(new ElasticDTO(100L,4L,Day2,"Nuit"));
+        elastic.add(new ElasticDTO(100L,4L,Day,"Nuit"));
         for(ElasticDTO b :elastic)
         {
             if (b.getIdStation().equals(booking.getIdStation())) {
